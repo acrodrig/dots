@@ -76,13 +76,14 @@ alias dt="deno task"
 # Alias for screen
 alias sl="screen -ls"
 alias sr="screen -r"
+alias sx="screen -x"
 alias ss="screen -S"
 
 # Set up quick IntelliJ opening from the command line
 alias idea='open -na "IntelliJ IDEA.app" --args "$@"'
 
 # Script to release to github
-alias release="$HOME/Code/AC/dotfiles/scripts/release.ts"
+alias release="$HOME/Code/AC/dots/scripts/release.ts"
 
 
 # ----------------------------------------------------------------------------
