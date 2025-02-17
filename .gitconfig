@@ -1,0 +1,8 @@
+[user]
+	name = Andres C. Rodriguez
+	email = acrodrig@users.noreply.github.com
+[core]
+	excludesfile = /Users/andres/.gitignore
+	autocrlf = input
+[pull]
+	rebase = true

@@ -1,0 +1,16 @@
+.eslintrc.js
+.idea
+.ipynb_checkpoints
+.mocharc.js
+.npmrc
+.DS_Store
+*.iml
+*.env
+app.yaml
+credentials.*
+node_modules
+out
+scratch*.*
+secrets*.*
+trash
+tsconfig.json
