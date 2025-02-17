@@ -14,7 +14,8 @@ jobs:
       - { name: "🔽 Checkout code", uses: actions/checkout@v4 }
       - { name: "⚙️ Setup Deno", uses: denoland/setup-deno@v2 }
       - { name: "🎨 Ensuring code is formatted correctly", run: deno fmt --check }
-      - { name: "🧪 Running Tests", run: deno test --allow-all --coverage=cov/ }      - { name: "🔀 Transforming Coverage Format", run: deno coverage --lcov cov/ > cov.lcov }
+      - { name: "🧪 Running Tests", run: deno test --allow-all --coverage=cov/ }
+      - { name: "🔀 Transforming Coverage Format", run: deno coverage --lcov cov/ > cov.lcov }
 
       # Upload to Codecov (see https://github.com/marketplace/actions/codecov)
       - name: "☂️ Upload Test Coverage"
