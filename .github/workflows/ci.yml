@@ -1,7 +1,11 @@
 on:
   workflow_call:
     inputs:
+      cache: { required: false, type: boolean, default: true }
       publish: { required: false, type: boolean, default: false }
+
+env:
+  DENO_DIR: $HOME/.cache
 
 jobs:
   build:
