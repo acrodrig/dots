@@ -17,10 +17,10 @@ jobs:
       # Checkout and test
       # See https://deno.land/manual/advanced/continuous_integration for Deno CI
       # See https://docs.deno.com/runtime/reference/continuous_integration/#caching-dependencies for caching
-      - { name: "🔽 Checkout code", uses: actions/checkout@v4 }
-      - { name: "⚙️ Setup Deno", uses: denoland/setup-deno@v2 }
-      - { name: "📌 Caching Dependencies", uses: actions/cache@v4, with: { path: ${{ env.DENO_DIR }}, key: ${{ hashFiles('deno.lock') }} } }
-      - { name: "🎨 Ensuring code is formatted correctly", run: deno fmt --check }
+      - { name: "🔽 Checkout code", uses: "actions/checkout@v4" }
+      - { name: "⚙️ Setup Deno", uses: "denoland/setup-deno@v2" }
+      - { name: "📌 Caching Dependencies", uses: "actions/cache@v4", with: { path: ${{ env.DENO_DIR }}, key: ${{ hashFiles('deno.lock') }} } }
+      - { name: "🎨 Ensuring code is formatted correctly", run: "deno fmt --check" }
       - { name: "🧪 Running Tests", run: deno test --allow-all --coverage=cov/ }
       - { name: "🔀 Transforming Coverage Format", run: deno coverage --lcov cov/ > cov.lcov }
 
