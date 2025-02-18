@@ -5,7 +5,7 @@ on:
       publish: { required: false, type: boolean, default: false }
 
 env:
-  DENO_DIR: $HOME/.cache
+  DENO_DIR: .cache
 
 jobs:
   build:
@@ -19,12 +19,12 @@ jobs:
       - { name: "⚙️ Setup Deno", uses: "denoland/setup-deno@v2" }
 
       # Cache dependencies (https://docs.deno.com/runtime/reference/continuous_integration/#caching-dependencies)
-      - name: "📌 Caching Dependencies"
-        if: inputs.cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.DENO_DIR }}
-          key: ${{ hashFiles('deno.lock') }}
+#      - name: "📌 Caching Dependencies"
+#        if: inputs.cache
+#        uses: actions/cache@v4
+#        with:
+#          path: ${{ env.DENO_DIR }}
+#          key: ${{ hashFiles('deno.lock') }}
 
       - { name: "🎨 Ensuring code is formatted correctly", run: "deno fmt --check" }
       - { name: "🧪 Running Tests", run: "deno test --allow-all --coverage=cov/" }
