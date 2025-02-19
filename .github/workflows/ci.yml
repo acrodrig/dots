@@ -27,7 +27,7 @@ jobs:
           key: ${{ hashFiles('deno.lock') }}
 
       - { name: "🎨 Ensuring code is formatted correctly", run: "deno fmt --check" }
-      - { name: "🧪 Running Tests", run: "deno test --allow-all --coverage=cov/" }
+      - { name: "🧪 Running Tests", run: "deno test --allow-all --unstable-kv --coverage=cov/" }
       - { name: "🔀 Transforming Coverage Format", run: "deno coverage --lcov cov/ > cov.lcov" }
 
       # Upload to Codecov (see https://github.com/marketplace/actions/codecov)
