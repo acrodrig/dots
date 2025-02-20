@@ -28,15 +28,15 @@ jobs:
 
       - { name: "🎨 Ensuring code is formatted correctly", run: "deno fmt --check" }
       - { name: "🧪 Running Tests", run: "deno test --allow-all --unstable-kv --coverage=cov/" }
-      - { name: "🔀 Transforming Coverage Format", run: "deno coverage --lcov cov/ > cov.lcov" }
+      # - { name: "🔀 Transforming Coverage Format", run: "deno coverage --lcov cov/ > cov.lcov" }
 
       # Upload to Codecov (see https://github.com/marketplace/actions/codecov)
-      - name: "☂️ Upload Test Coverage"
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: cov.lcov
-          fail_ci_if_error: true
+      # - name: "☂️ Upload Test Coverage"
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: cov.lcov
+      #     fail_ci_if_error: true
 
   publish:
     needs: build
