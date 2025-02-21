@@ -5,9 +5,11 @@ on:
       publish: { required: false, type: boolean, default: false }
     secrets:
       CODECOV_TOKEN: { required: false }
+      DENO_AUTH_TOKENS: { required: false }
 
 env:
   DENO_DIR: .cache
+  DENO_AUTH_TOKENS: ${{ secrets.DENO_AUTH_TOKENS }}
 
 jobs:
   build:
