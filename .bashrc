@@ -125,6 +125,11 @@ function terms() {
     osascript -l JavaScript -e "Application('Terminal').doScript('ts 256 && clear')"
 }
 
+# Git Un tag
+function untag() {
+    git tag -d $1 && git push origin --delete $1
+}
+
 # Refresh Chrome
 function refresh-chrome() {
     osascript -e 'tell application "Chrome" to tell the active tab of its first window to reload'

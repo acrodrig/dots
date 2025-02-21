@@ -13,7 +13,6 @@ if (args.help) console.log(USAGE), Deno.exit(0);
 
 // Test formatting
 let version = args._.pop()?.toString();
-console.log("Version: " + version + ", " + typeof version);
 if (version && !version?.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)) console.error("❌ Version '" + version + "' is not a semantic full tag (i.e. X.X.X)"), Deno.exit(1);
 
 // Make sure there are no changes
