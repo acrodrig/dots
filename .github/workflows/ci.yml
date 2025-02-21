@@ -3,6 +3,8 @@ on:
     inputs:
       cache: { required: false, type: boolean, default: true }
       publish: { required: false, type: boolean, default: false }
+    secrets:
+      CODECOV_TOKEN: { required: false }
 
 env:
   DENO_DIR: .cache
