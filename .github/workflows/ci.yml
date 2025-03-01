@@ -2,6 +2,7 @@ on:
   workflow_call:
     inputs:
       cache: { required: false, type: boolean, default: true }
+      codecov: { required: false, type: boolean, default: true }
       publish: { required: false, type: boolean, default: false }
     secrets:
       CODECOV_TOKEN: { required: false }
@@ -16,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Debug
-      # - { name: "🐞 Debug Github Context", uses: "echo '${{ toJson(github) }}'" }
+      # - { name: "🐞 Debug GitHub Context", uses: "echo '${{ toJson(github) }}'" }
 
       # Checkout and test
       - { name: "🔽 Checkout code", uses: "actions/checkout@v4" }
