@@ -37,6 +37,7 @@ jobs:
 
       # Upload to Codecov (see https://github.com/marketplace/actions/codecov)
       - name: "☂️ Upload Test Coverage"
+        if: inputs.codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
