@@ -20,12 +20,13 @@ const diff = await $`git diff --quiet`.noThrow(1);
 if (diff.code !== 0) console.error("❌ Git local different than remote, need to commit?"), Deno.exit(1);
 
 // Get the previous version
-const previous = await $`git describe --tags --abbrev=0`.text();
-const [ major, minor, patch ] = previous.split(".").map((n) => parseInt(n));
+const previous = await $`git describe --tags --abbrev=0`.noThrow(128).text();
+const [ major, minor, patch ] = previous ? previous.split(".").map((n) => parseInt(n)) : [0, 0, 0];
 
 // Collecting log
 console.info("🗒️  Collecting Notes");
-const log = (await $`git log ${previous}..HEAD --oneline --no-decorate`.lines()).filter((l: string) => l.trim().length > 0);
+const first = await $`git rev-list --max-parents=0 HEAD`.text();
+const log = (await $`git log ${previous || first}..HEAD --oneline --no-decorate`.lines()).filter((l: string) => l.trim().length > 0);
 if (log.length === 0) console.error("❌ There is nothing new to release"), Deno.exit(1);
 
 // Test formatting
