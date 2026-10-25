@@ -1,0 +1,102 @@
+#!/usr/bin/osascript -l JavaScript
+
+// One Mail rule per category: colors messages and optionally flags them.
+// color:         red, orange, yellow, green, blue, purple, gray
+// highlightText: true = color the text, false = color the background
+// flag:          true = also set a flag of the same color
+// match entries: matched against From OR To/Cc ("contains")
+// Categories with an empty match list are skipped.
+// Re-running removes all "Color: " rules and recreates them from CATEGORIES.
+
+const PREFIX = "Color: ";
+
+const FLAG_INDEX = { red: 0, orange: 1, yellow: 2, green: 3, blue: 4, purple: 5, gray: 6 };
+
+// Match lists
+const SECURITY = [];
+const FINANCE = ["citicards@info6.citi.com"];
+const GROUPS = ["accounts@nimblr.ai"];
+const SHIPPING = [];
+const COMMERCE = ["shipment-tracking@amazon.com"];
+const ALERTS = ["data-studio-noreply@google.com"];
+const SUBSCRIPTIONS = [
+    "notifications@t.observablehq.com",
+    "info@account.netflix.com",
+    "orders@tennistv.com"
+];
+const TRAVEL = [
+    "loyalty@loyalty.ms.aa.com",
+    "DeltaAirLines@t.delta.com",
+];
+const NEWSLETTERS = [
+    "anythinggoes@startx.com",
+    "3blue1brown@creator.patreon.com",
+    "parents@oberlin.edu",
+    "collin.pham@email.usestable.com",
+    "news-noreply@news.pitchbook.com",
+    "utr-sports@hello.utrsports.com",
+];
+const SOCIAL = [];
+
+// Order = priority (first match wins)
+const CATEGORIES = [
+    // { name: "Security",      color: "red",    match: SECURITY },
+    { name: "Finance",       color: "green",  match: FINANCE },
+    { name: "Groups",        color: "yellow",   match: GROUPS },
+    // { name: "Shipping",      color: "orange", match: SHIPPING },
+    { name: "Commerce",      color: "orange", match: COMMERCE },
+    { name: "Alerts",  color: "red", match: ALERTS },
+    { name: "Subscriptions", color: "purple", match: SUBSCRIPTIONS },
+    { name: "Travel",        color: "blue",   match: TRAVEL },
+    { name: "Newsletters",   color: "gray",   match: NEWSLETTERS },
+    // { name: "Social",        color: "gray",   match: SOCIAL }
+];
+
+function run() {
+    const Mail = Application("Mail");
+    const created = [];
+    const skipped = [];
+
+    // Remove all previously generated rules, including renamed/removed categories
+    const old = Mail.rules.name().filter((n) => n.startsWith(PREFIX));
+    for (const n of old) {
+        Mail.rules.byName(n).delete();
+    }
+
+    for (const c of CATEGORIES) {
+        const ruleName = PREFIX + c.name;
+
+        if (c.match.length === 0) {
+            skipped.push(ruleName);
+            continue;
+        }
+
+        Mail.rules.push(Mail.Rule({ name: ruleName, enabled: false }));
+        const rule = Mail.rules.byName(ruleName);
+
+        rule.allConditionsMustBeMet = false;
+
+        for (const value of c.match) {
+            for (const ruleType of ["from header", "any recipient"]) {
+                rule.ruleConditions.push(Mail.RuleCondition({
+                    ruleType: ruleType,
+                    qualifier: "does contain value",
+                    expression: value
+                }));
+            }
+        }
+
+        rule.colorMessage = c.color;
+        rule.highlightTextUsingColor = false;
+        rule.markFlagged = true;
+        rule.markFlagIndex = FLAG_INDEX[c.color];
+        rule.stopEvaluatingRules = true; // first matching category wins
+        rule.enabled = true;
+
+        created.push(`${ruleName} (${c.match.length} entries ${c.color} flag)`);
+    }
+
+    let out = "Created:\n" + (created.length ? created.join("\n") : "(none)");
+    if (skipped.length) out += "\n\nSkipped (empty):\n" + skipped.join("\n");
+    return out;
+}

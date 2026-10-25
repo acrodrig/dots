@@ -6,6 +6,8 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # BASICS
 # ----------------------------------------------------------------------------
 
+export COLORTERM=truecolor
+
 # Colors - declare them to make it easier to use
 COLOR_DEFAULT="\[\033[m\]"
 COLOR_RED="\[\033[31m\]"
@@ -72,6 +74,9 @@ alias gf="git fetch --all"
 
 # Alias for deno
 alias dt="deno task"
+
+# Alias for github
+alias ghb="gh browse"
 
 # Alias for screen
 alias sl="screen -ls"
@@ -161,3 +166,5 @@ function et() {
 # Add quick directory changing to code
 export PATH="/Users/andres/.deno/bin:$PATH"
 export CDPATH=.:~/Code/AC:~/Code/RC
+. "/Users/andres/.deno/env"
+. "$HOME/.local/bin/env"

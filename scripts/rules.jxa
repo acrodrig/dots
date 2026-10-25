@@ -1,0 +1,62 @@
+#!/usr/bin/osascript -l JavaScript
+// Prints Apple Mail rules as JSON to stdout.
+
+function safe(fn, fallback = null) {
+    try {
+        const v = fn();
+        return v === undefined ? fallback : v;
+    } catch (e) {
+        return fallback;
+    }
+}
+
+function mailboxPath(mb) {
+    if (!mb) return null;
+    const name = safe(() => mb.name());
+    const account = safe(() => mb.account().name());
+    return account ? `${account}/${name}` : name;
+}
+
+function run() {
+    const Mail = Application("Mail");
+
+    const rules = Mail.rules().map((r) => {
+        const conditions = safe(() => r.ruleConditions(), []).map((c) => {
+            const cond = {
+                type: safe(() => c.ruleType()),
+                qualifier: safe(() => c.qualifier()),
+                expression: safe(() => c.expression()),
+            };
+            if (cond.type === "header key") cond.header = safe(() => c.header());
+            return cond;
+        });
+
+        const actions = {};
+        if (safe(() => r.shouldMoveMessage(), false)) actions.moveTo = mailboxPath(safe(() => r.moveMessage()));
+        if (safe(() => r.shouldCopyMessage(), false)) actions.copyTo = mailboxPath(safe(() => r.copyMessage()));
+        if (safe(() => r.markRead(), false)) actions.markRead = true;
+        if (safe(() => r.markFlagged(), false)) actions.flagIndex = safe(() => r.markFlagIndex());
+        if (safe(() => r.deleteMessage(), false)) actions.delete = true;
+        const fwd = safe(() => r.forwardMessage(), "");
+        if (fwd) actions.forwardTo = fwd;
+        const redir = safe(() => r.redirectMessage(), "");
+        if (redir) actions.redirectTo = redir;
+        const reply = safe(() => r.replyText(), "");
+        if (reply) actions.replyText = reply;
+        const color = safe(() => r.colorMessage(), "none");
+        if (color && color !== "none") actions.color = color;
+        const script = safe(() => r.runScript(), null);
+        if (script) actions.runScript = safe(() => script.toString());
+        if (safe(() => r.stopEvaluatingRules(), false)) actions.stopEvaluatingRules = true;
+
+        return {
+            name: safe(() => r.name()),
+            enabled: safe(() => r.enabled()),
+            matchAll: safe(() => r.allConditionsMustBeMet()),
+            conditions: conditions,
+            actions: actions,
+        };
+    });
+
+    return JSON.stringify(rules, null, 2);
+}
